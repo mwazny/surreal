@@ -49,11 +49,11 @@ int main() {
 
 ##  Building & Running Tests
 
-Requires a C++17 compatible compiler (e.g., `g++` or `clang++`).
+Requires a C++20 compatible compiler (e.g., `g++` or `clang++`).
 
 ```bash
 # Compile
-g++ -std=c++17 -Wall -Wextra main.cpp surreal.cpp -o surreal.o
+g++ -std=c++20 -Wall -Wextra main.cpp surreal.cpp -o surreal.o
 
 # Run tests
 ./surreal.o

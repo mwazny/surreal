@@ -44,6 +44,7 @@ public:
   friend Surreal operator+(const Surreal & x, const Surreal & y);
   friend Surreal operator-(const Surreal & x);
   friend Surreal operator-(const Surreal & x, const Surreal & y);
+  friend Surreal operator*(const Surreal & x, const Surreal & y);
 };
 
 #endif

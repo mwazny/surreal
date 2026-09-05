@@ -18,9 +18,12 @@ Comparison between two surreal numbers $x$ and $y$ is defined as:
 
 $$x \le y \iff (\forall l \in L_x, y \not\le l) \land (\forall r \in R_y, r \not\le x)$$
 
-Derived equality and inequality:
-* $x == y \iff (x \le y) \land (y \le x)$
-* $x < y \iff (x \le y) \land \neg(y \le x)$
+### Arithmetic
+* **Negation:** $-x = \{ -R_x \mid -L_x \}$
+* **Addition:** $x + y = \{ L_x + y \cup x + L_y \mid R_x + y \cup x + R_y \}$
+* **Multiplication:** $x \cdot y = \{ X_{LL} \cup X_{RR} \mid X_{LR} \cup X_{RL} \}$
+  * where $X_{LL} = \{ l_x y + x l_y - l_x l_y \}$ and $X_{RR} = \{ r_x y + x r_y - r_x r_y \}$
+  * where $X_{LR} = \{ l_x y + x r_y - l_x r_y \}$ and $X_{RL} = \{ r_x y + x l_y - r_x l_y \}$
 
 ##  Example Usage
 
@@ -39,9 +42,12 @@ int main() {
     // Day 2
     Surreal pos_half({zero}, {pos_one}); // 1/2 = { 0 | 1 }
 
-    if (neg_one < pos_half && pos_half < pos_one) {
-        std::cout << "-1 < 1/2 < 1" << std::endl;
-    }
+    // Arithmetic
+    Surreal sum = pos_half + pos_half;   // 1/2 + 1/2 = 1
+    Surreal prod = pos_half * pos_one;   // 1/2 * 1 = 1/2
+
+    std::cout << "sum == 1: " << (sum == pos_one ? "true" : "false") << std::endl;
+    std::cout << "1/2 string form: " << pos_half.to_string() << std::endl;
 
     return 0;
 }

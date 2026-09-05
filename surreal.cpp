@@ -100,8 +100,8 @@ Surreal operator+(const Surreal & x, const Surreal & y) {
   Surreal zero{};
 
   if (x == zero && y == zero) return zero;
-  else if (x == zero) return y;
-  else if (y == zero) return x;
+  if (x == zero) return y;
+  if (y == zero) return x;
 
   std::vector<Surreal> l;
   std::vector<Surreal> r;
@@ -111,7 +111,7 @@ Surreal operator+(const Surreal & x, const Surreal & y) {
   for (const auto & xr : x.r()) r.emplace_back(xr + y);
   for (const auto & yr : y.r()) r.emplace_back(yr + x);
 
-  return Surreal(l, r);
+  return Surreal(l, r).simplify();
 }
 
 Surreal operator-(const Surreal & x) {
@@ -125,9 +125,47 @@ Surreal operator-(const Surreal & x) {
   for (const auto & xl : x.l()) l.emplace_back(-xl);
   for (const auto & xr : x.r()) r.emplace_back(-xr);
 
-  return Surreal(r, l);
+  return Surreal(r, l).simplify();
 }
 
 Surreal operator-(const Surreal & x, const Surreal & y) {
-  return x + -y;
+  return (x + -y).simplify();
+}
+
+Surreal operator*(const Surreal & x, const Surreal & y) {
+  Surreal zero{};
+  Surreal pos_one({zero}, {});
+  Surreal neg_one({}, {zero});
+
+  if (x == zero || y == zero) return zero;
+  if (x == pos_one) return y;
+  if (y == pos_one) return x;
+  if (x == neg_one) return -y;
+  if (y == neg_one) return -x;
+
+  std::vector<Surreal> l;
+  std::vector<Surreal> r;
+
+  for (const auto & xl : x.l()) {
+    for (const auto & yl : y.l()) {
+      l.emplace_back(xl * y + x * yl - xl * yl);
+    }
+  }
+  for (const auto & xr : x.r()) {
+    for (const auto & yr : y.r()) {
+      l.emplace_back(xr * y + x * yr - xr * yr);
+    }
+  }
+  for (const auto & xl : x.l()) {
+    for (const auto & yr : y.r()) {
+      r.emplace_back(xl * y + x * yr - xl * yr);
+    }
+  }
+  for (const auto & xr : x.r()) {
+    for (const auto & yl : y.l()) {
+      r.emplace_back(yl * x + y * xr - xr * yl);
+    }
+  }
+
+  return Surreal(l, r).simplify();
 }
